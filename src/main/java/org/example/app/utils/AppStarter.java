@@ -1,4 +1,4 @@
-package org.example.app.service;
+package org.example.app.utils;
 
 import jakarta.ws.rs.core.UriBuilder;
 import org.example.app.utils.Constants;

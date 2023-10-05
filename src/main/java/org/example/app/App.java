@@ -1,6 +1,6 @@
 package org.example.app;
 
-import org.example.app.service.AppStarter;
+import org.example.app.utils.AppStarter;
 
 import java.io.IOException;
 
