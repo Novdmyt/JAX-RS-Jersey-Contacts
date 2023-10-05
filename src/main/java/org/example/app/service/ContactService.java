@@ -46,15 +46,47 @@ public class ContactService {
         if (Objects.isNull(contact.getId()))
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
 
-int index = Collections.binarySearch(contacts, contact, Comparator
-        .comparing(Contact::getId));
+        int index = Collections.binarySearch(contacts, contact, Comparator
+                .comparing(Contact::getId));
 
-if(index < 0) {
-    contacts.add(contact);
-    return Response.status(Response.Status.CREATED)
-            .location(URI.create(String.format("/api/v1.0/contacts/%s", contact.getName()))).build();
-}else
-    throw new WebApplicationException(Response.Status.CONFLICT);
+        if (index < 0) {
+            contacts.add(contact);
+            return Response.status(Response.Status.CREATED)
+                    .location(URI.create(String.format("/api/v1.0/contacts/%s", contact.getName()))).build();
+        } else
+            throw new WebApplicationException(Response.Status.CONFLICT);
+    }
+
+    @PUT
+    @Path(MediaType.APPLICATION_JSON)
+    public Response updateContact(@PathParam("id") Long id, Contact contact) {
+        contact.setId(id);
+        int index = Collections.binarySearch(contacts, contact, Comparator.comparing(Contact::getId));
+        if (index >= 0) {
+            Contact updatedContact = contacts.get(index);
+
+            updatedContact.setPhone(contact.getPhone());
+            contacts.set(index, updatedContact);
+            return Response
+                    .status(Response.Status.NO_CONTENT)
+                    .build();
+        } else
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+    }
+
+    @DELETE
+    @Path("{id: [0-9]+}")
+    public Response deleteContact(@PathParam("id") Long id) {
+        Contact contact = new Contact(id, null, null);
+        int index = Collections.binarySearch(contacts, contact, Comparator.comparing(Contact::getId));
+
+        if (index >= 0) {
+            contacts.remove(index);
+            return Response
+                    .status(Response.Status.NO_CONTENT)
+                    .build();
+        } else
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 }
 
