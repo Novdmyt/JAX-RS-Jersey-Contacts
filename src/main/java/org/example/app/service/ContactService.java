@@ -17,10 +17,10 @@ public class ContactService {
 
     static {
         contacts = new ArrayList<>();
-        contacts.add(new Contact(1L, "Alice", "+380 587 471-9857"));
-        contacts.add(new Contact(2L, "Bob", "369 258 157-2587"));
-        contacts.add(new Contact(3L, "Lucy", "+380 569 547-6985"));
-        contacts.add(new Contact(4L, "Tom", "+380 587 547-8564"));
+        contacts.add(new Contact(1L, "Alice", "+380258741369"));
+        contacts.add(new Contact(2L, "Bob", "+380526741852"));
+        contacts.add(new Contact(3L, "Lucy", "+380258963741"));
+        contacts.add(new Contact(4L, "Tom", "+380258741963"));
 
     }
 
@@ -58,7 +58,8 @@ public class ContactService {
     }
 
     @PUT
-    @Path(MediaType.APPLICATION_JSON)
+    @Path("{id: [0-9]+}")
+    @Consumes({MediaType.APPLICATION_JSON})
     public Response updateContact(@PathParam("id") Long id, Contact contact) {
         contact.setId(id);
         int index = Collections.binarySearch(contacts, contact, Comparator.comparing(Contact::getId));
