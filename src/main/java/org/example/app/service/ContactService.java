@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.Response;
 import org.example.app.entity.Contact;
 
 
+import java.net.URI;
 import java.util.*;
 
 @Path("/api/v1.0/contacts")
@@ -39,7 +40,22 @@ public class ContactService {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response createContact(Contact contact) {
+        if (Objects.isNull(contact.getId()))
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
 
+int index = Collections.binarySearch(contacts, contact, Comparator
+        .comparing(Contact::getId));
+
+if(index < 0) {
+    contacts.add(contact);
+    return Response.status(Response.Status.CREATED)
+            .location(URI.create(String.format("/api/v1.0/contacts/%s", contact.getName()))).build();
+}else
+    throw new WebApplicationException(Response.Status.CONFLICT);
+    }
 }
 
 
